@@ -9,7 +9,7 @@ This is a simple Python client that interacts with the
 
 Requires:
 
-- Python >=3.8
+- Python >=3.7
 
 Install this package with `pip`:
 
