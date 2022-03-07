@@ -1,0 +1,3 @@
+requests~=2.27
+furl~=2.1
+python-dotenv~=0.19
