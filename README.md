@@ -48,13 +48,24 @@ method:
 
 ```python
 # Send a POST request to the `/entities` endpoint
+
+## Make ID for new entity
+new_id = APIClient.make_id(
+  namespace="ic-playground.example.local",
+  kind="indicator",
+  value="172.16.1.10"
+)
+
+## Construct payload to send
 payload = {
   "data": {
-    "id": "{ic-playground.example.local}indicator-91888462-b816-567b-8d31-bb890467d0d6",
+    "id": new_id,
     "title": "172.16.1.10",
   },
   "type": "indicator",
 }
+
+# Send POST request to `/entities` with constructed payload
 created_entity = client.post("entities", payload)
 ```
 

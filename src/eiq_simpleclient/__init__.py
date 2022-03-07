@@ -3,6 +3,7 @@ import json
 from pprint import pprint as pp
 import requests
 from typing import Any, Dict, List
+import uuid
 
 
 class APIClient:
@@ -57,3 +58,32 @@ class APIClient:
         f.args = {}
 
         return self.get(f.url)
+
+    @staticmethod
+    def make_id(namespace: str, kind: str, value: str):
+        """Creates a STIX-like ID, used to set the `data.id`
+        field of the payload when making a POST /entities
+        request.
+
+        :param namespace: E.g., "tip.example.com"
+        :type namespace: str
+        :param kind: The type of object being identified.
+            This is usually an entity type, e.g. "indicator"
+        :type kind: str
+        :param value: The value contained by the object to identify.
+            For example, when identifying an IPv4 indicator,
+            the 'value' should be the IPv4 value being indicated.
+            E.g., "172.16.1.10"
+        :type value: str
+        """
+
+        hashable_value = "{}:{}".format(kind.encode("utf-8"), value.encode("utf-8"))
+
+        this_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, hashable_value)
+
+        if kind in ["email", "uri", "ipv4", "ip", "domain"]:
+            tlo_type = "indicator"
+        else:
+            tlo_type = kind
+
+        return "{{{}}}{}-{}".format(namespace, tlo_type, this_uuid)
