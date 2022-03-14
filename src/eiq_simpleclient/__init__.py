@@ -23,7 +23,7 @@ class APIClient:
             "Accept": "application/json",
         }
 
-    def get(self, path: str, params: Dict[str, str] = {}) -> Dict[str, Any]:
+    def get(self, path: str, params: Dict[str, Any] = {}) -> Dict[str, Any]:
         """Send a GET request to a given endpoint"""
         if path.startswith(self.baseurl):
             f = furl(path)
@@ -37,7 +37,7 @@ class APIClient:
         r = requests.get(f, headers=self.headers)
         return json.loads(r.text)
 
-    def post(self, path: str, payload: str) -> Dict[str, Any]:
+    def post(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         """Send a POST request to a given endpoint"""
         if not path.startswith("/"):
             path = "/" + path
