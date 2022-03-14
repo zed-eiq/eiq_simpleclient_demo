@@ -48,6 +48,15 @@ class APIClient:
         r = requests.post(f, headers=self.headers, data=json.dumps(payload))
         return json.loads(r.text)
 
+    def patch(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Send a PATCH request to a given endpoint"""
+        f = furl(self.baseurl)
+        f.path.add(path)
+
+        r = requests.patch(f, headers=self.headers, data=json.dumps(payload))
+        return json.loads(r.text)
+
+
     def resolve(self, path: str) -> Dict[str, Any]:
         """Retrieves a resources at a given endpoint"""
 
