@@ -58,7 +58,10 @@ class APIClient:
 
 
     def resolve(self, path: str) -> Dict[str, Any]:
-        """Retrieves a resources at a given endpoint"""
+        """Retrieves a resources at a given endpoint
+
+        This also trims all queries from given URI/path.
+        """
 
         # Get only stem of path; omit query parameters
         f = furl(path)
