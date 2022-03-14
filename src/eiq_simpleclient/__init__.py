@@ -56,6 +56,13 @@ class APIClient:
         r = requests.patch(f, headers=self.headers, data=json.dumps(payload))
         return json.loads(r.text)
 
+    def delete(self, path: str) -> Dict[str, Any]:
+        """Send a DELETE request to a given endpoint"""
+        f = furl(self.baseurl)
+        f.path.add(path)
+
+        r = requests.delete(f, headers=self.headers)
+        return json.loads(r.text)
 
     def resolve(self, path: str) -> Dict[str, Any]:
         """Retrieves a resources at a given endpoint
