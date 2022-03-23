@@ -23,7 +23,7 @@ class APIClient:
             "Accept": "application/json",
         }
 
-    def get(self, path: str, params: Dict[str, str] = {}) -> Dict[str, Any]:
+    def get(self, path: str, params: Dict[str, Any] = {}) -> Dict[str, Any]:
         """Send a GET request to a given endpoint"""
         if path.startswith(self.baseurl):
             f = furl(path)
@@ -37,7 +37,7 @@ class APIClient:
         r = requests.get(f, headers=self.headers)
         return json.loads(r.text)
 
-    def post(self, path: str, payload: str) -> Dict[str, Any]:
+    def post(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         """Send a POST request to a given endpoint"""
         if not path.startswith("/"):
             path = "/" + path
@@ -48,8 +48,27 @@ class APIClient:
         r = requests.post(f, headers=self.headers, data=json.dumps(payload))
         return json.loads(r.text)
 
+    def patch(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Send a PATCH request to a given endpoint"""
+        f = furl(self.baseurl)
+        f.path.add(path)
+
+        r = requests.patch(f, headers=self.headers, data=json.dumps(payload))
+        return json.loads(r.text)
+
+    def delete(self, path: str) -> Dict[str, Any]:
+        """Send a DELETE request to a given endpoint"""
+        f = furl(self.baseurl)
+        f.path.add(path)
+
+        r = requests.delete(f, headers=self.headers)
+        return json.loads(r.text)
+
     def resolve(self, path: str) -> Dict[str, Any]:
-        """Retrieves a resources at a given endpoint"""
+        """Retrieves a resources at a given endpoint
+
+        This also trims all queries from given URI/path.
+        """
 
         # Get only stem of path; omit query parameters
         f = furl(path)
