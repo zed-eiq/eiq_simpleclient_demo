@@ -106,3 +106,43 @@ class APIClient:
             tlo_type = kind
 
         return "{{{}}}{}-{}".format(namespace, tlo_type, this_uuid)
+
+    @staticmethod
+    def shorten_entity(entity: Dict[str, Any]) -> Dict[str, Any]:
+        """Truncates and returns an entity object with
+        fewer fields.
+
+        Can accept the response from:
+
+        - ``GET /entities/{id}``
+        - ``GET /entities?limit=1``
+        """
+        assert(isinstance(entity, dict)), f"Must be a dict: {entity}"
+        assert(entity.get("data", False)), f"Must have a 'data' object: {entity}"
+        assert(not isinstance(entity, list)), f"Must be a single 'data' object: {entity}"
+        if isinstance(entity["data"], list):
+            assert(len(entity["data"]) == 1), f"Must be a single 'data' object: {entity}"
+
+        if isinstance(entity["data"], list):
+            entity = entity["data"][0]
+        else:
+            entity = entity["data"]
+
+        required_fields = (
+            "data",
+            "id",
+            "sources",
+            "type",
+            "meta",
+        ) # Required fields in an entity
+        for field in required_fields:
+            assert(entity.get(field, False)), f"Not a valid entity. Must contain field '{field}': {entity}"
+
+        return {
+            "data": {
+                "title": entity["data"].get("title",""),
+                "id": entity["data"].get("id", "")
+            },
+            "id": entity.get("id", ""),
+            "type": entity.get("type", ""),
+        }
